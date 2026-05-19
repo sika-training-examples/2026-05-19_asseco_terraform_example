@@ -17,6 +17,13 @@ resource "azurerm_subnet_network_security_group_association" "subnet1_allow22" {
   network_security_group_id = azurerm_network_security_group.allow22.id
 }
 
+resource "azurerm_subnet" "aks" {
+  name                 = "aks"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet1.name
+  address_prefixes     = ["10.1.2.0/24"]
+}
+
 resource "azurerm_virtual_network_peering" "net2_to_net1" {
   name                      = "peer-net2-to-net1"
   resource_group_name       = azurerm_virtual_network.vnet1.resource_group_name
