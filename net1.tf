@@ -33,3 +33,15 @@ resource "azurerm_virtual_network_peering" "net2_to_net1" {
   allow_gateway_transit     = false
   use_remote_gateways       = false
 }
+
+resource "azurerm_private_dns_zone" "postgres" {
+  name                = "${local.prefix}.postgres.database.azure.com"
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "postgres" {
+  name                  = "${local.prefix}-postgres-dns-link"
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.postgres.name
+  virtual_network_id    = azurerm_virtual_network.vnet1.id
+}

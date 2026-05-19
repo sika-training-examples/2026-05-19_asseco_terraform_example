@@ -35,6 +35,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
     public_key = local.ssh_public_key
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
