@@ -11,3 +11,13 @@ resource "azurerm_subnet" "subnet2" {
   virtual_network_name = azurerm_virtual_network.vnet2.name
   address_prefixes     = ["10.2.1.0/24"]
 }
+
+resource "azurerm_virtual_network_peering" "net1_to_net2" {
+  name                      = "peer-net1-to-net2"
+  resource_group_name       = azurerm_virtual_network.vnet2.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.vnet2.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet1.id
+  allow_forwarded_traffic   = true
+  allow_gateway_transit     = false
+  use_remote_gateways       = false
+}
