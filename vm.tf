@@ -52,6 +52,30 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 }
 
+resource "azurerm_virtual_machine_extension" "aad_ssh_login" {
+  name                 = "AADSSHLoginForLinux"
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
+  publisher            = "Microsoft.Azure.ActiveDirectory"
+  type                 = "AADSSHLoginForLinux"
+  type_handler_version = "1.0"
+}
+
+resource "azurerm_role_assignment" "vm_admin_login" {
+  scope                =  azurerm_linux_virtual_machine.vm.id
+  role_definition_name = "Virtual Machine Administrator Login"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "vm_admin_login2" {
+  scope                =  azurerm_linux_virtual_machine.vm.id
+  role_definition_name = "Virtual Machine Administrator Login"
+  principal_id         = "0fdd1722-661a-4b94-9292-192544017b60" // ondrej@sika.io
+}
+
 output "vm_public_ip" {
   value = azurerm_public_ip.pip.ip_address
+}
+
+output "ssh" {
+  value = "az ssh vm --subscription ${data.azurerm_client_config.current.subscription_id} -g ${azurerm_resource_group.rg.name} -n ${azurerm_linux_virtual_machine.vm.name}"
 }
