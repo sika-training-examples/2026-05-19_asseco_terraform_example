@@ -12,6 +12,11 @@ resource "azurerm_subnet" "subnet1" {
   address_prefixes     = ["10.1.1.0/24"]
 }
 
+resource "azurerm_subnet_network_security_group_association" "subnet1_allow22" {
+  subnet_id                 = azurerm_subnet.subnet1.id
+  network_security_group_id = azurerm_network_security_group.allow22.id
+}
+
 resource "azurerm_virtual_network_peering" "net2_to_net1" {
   name                      = "peer-net2-to-net1"
   resource_group_name       = azurerm_virtual_network.vnet1.resource_group_name
